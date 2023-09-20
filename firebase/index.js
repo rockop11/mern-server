@@ -1,10 +1,6 @@
-// Import the functions you need from the SDKs you need
 const { initializeApp } = require("firebase/app")
 const { getStorage, ref, listAll, uploadBytes, list, getDownloadURL } = require("firebase/storage")
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -14,7 +10,6 @@ const firebaseConfig = {
     appId: process.env.FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
 const firebase = initializeApp(firebaseConfig);
 const storage = getStorage(firebase);
 
@@ -41,17 +36,19 @@ const getUserImage = async (id, name) => {
     }
 }
 
-const uploadProductImages = async (id, name, image) => {
-    // const storageRef = ref(storage, `Products/${id}/${name}`)
+const uploadProductImages = async (id, images) => {
+    const metadata = {
+        contentType: 'image/jpeg',
+    };
 
-    // const metadata = {
-    //     contentType: 'image/jpeg',
-    // };
+    for (let i = 0; i < images.length; i++) {
+        const storageRef = ref(storage, `Products/${id}/${images[i].originalname}`)
 
-    // uploadBytes(storageRef, image, metadata)
-    //     .catch((err) => {
-    //         console.log("error de subida", err);
-    //     })
+        await uploadBytes(storageRef, images[i].buffer, metadata)
+            .catch((err) => {
+                console.log("no se pudieron subir las imagenes", err);
+            })
+    }
 }
 
 module.exports = {

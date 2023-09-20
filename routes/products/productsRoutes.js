@@ -8,6 +8,12 @@ const createProductValidations = require("../../middlewares/validations/products
 
 const { createProduct } = productController
 
-router.post("/create-product", upload.array("images"), verifyToken, createProductValidations, createProduct)
+router.post(
+    "/create-product",
+    upload.array("images"),
+    verifyToken,
+    createProductValidations,
+    createProduct
+)
 
 module.exports = router

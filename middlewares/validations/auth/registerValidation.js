@@ -33,8 +33,6 @@ const registerValidations = [
         }
         return true
     })
-
-
 ]
 
 module.exports = registerValidations

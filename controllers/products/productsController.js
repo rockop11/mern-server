@@ -53,7 +53,7 @@ const productController = {
                     error: err
                 })
             })
-        // await uploadProductImages()
+        await uploadProductImages(newProduct._id, files)
     }
 }
 
