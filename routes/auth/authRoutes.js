@@ -10,7 +10,14 @@ const verifyToken = require("../../middlewares/verifyToken")
 const { login, register, profile } = authController
 
 router.post("/login", loginValidations, login)
-router.post("/register", upload.single('image'), verifyToken, registerValidations, register)
+
+router.post("/register",
+    upload.single('image'),
+    verifyToken,
+    registerValidations,
+    register
+)
+
 router.get("/profile", verifyToken, profile)
 
 module.exports = router

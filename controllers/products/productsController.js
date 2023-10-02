@@ -17,6 +17,8 @@ const productController = {
         const { title, description, category, price, stock, discount, brands } = req.body
         const { files } = req
 
+        
+
         //creamos el array vacio para armar el objeto para mongoDB, con las props.
         const imageNames = []
         const brandNames = []
@@ -54,6 +56,16 @@ const productController = {
                 })
             })
         await uploadProductImages(newProduct._id, files)
+    },
+
+    productsList: async (req, res) => {
+
+        const productsList = await Product.find()
+
+        res.status(200).json({
+            data: productsList,
+            length: productsList.length
+        })
     }
 }
 

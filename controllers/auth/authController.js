@@ -48,7 +48,7 @@ const authController = {
                     });
                 })
                 .catch(err => {
-                    res.json({
+                    res.status(401).json({
                         message: 'error al crear usuario',
                         error: err
                     });
