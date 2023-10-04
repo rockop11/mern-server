@@ -6,7 +6,7 @@ const productController = require('../../controllers/products/productsController
 const verifyToken = require("../../middlewares/verifyToken")
 const createProductValidations = require("../../middlewares/validations/products/createProductValidation")
 
-const { createProduct, productsList } = productController
+const { createProduct, productsList, productsListByBrands } = productController
 
 router.post(
     "/create-product",
@@ -17,5 +17,7 @@ router.post(
 )
 
 router.get("/products-list", productsList)
+
+router.get("/brands/:brand", productsListByBrands)
 
 module.exports = router

@@ -17,8 +17,6 @@ const productController = {
         const { title, description, category, price, stock, discount, brands } = req.body
         const { files } = req
 
-        
-
         //creamos el array vacio para armar el objeto para mongoDB, con las props.
         const imageNames = []
         const brandNames = []
@@ -59,12 +57,27 @@ const productController = {
     },
 
     productsList: async (req, res) => {
-
+        //returns the list with all the products.
         const productsList = await Product.find()
 
         res.status(200).json({
+            length: productsList.length,
             data: productsList,
-            length: productsList.length
+        })
+    },
+
+    productsListByBrands: async (req, res) => {
+        //returns a list of products by brands
+        const { brand } = req.params
+
+
+        const response = await Product.find(
+            { brands: { $elemMatch: { brand: `${brand}` } } }
+        )
+
+        res.status(200).json({
+            length: response.length,
+            data: response
         })
     }
 }
