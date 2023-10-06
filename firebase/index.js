@@ -1,5 +1,10 @@
 const { initializeApp } = require("firebase/app")
-const { getStorage, ref, listAll, uploadBytes, list, getDownloadURL } = require("firebase/storage")
+const { getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL,
+    deleteObject,
+} = require("firebase/storage")
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -51,10 +56,20 @@ const uploadProductImages = async (id, images) => {
     }
 }
 
+const deleteProductImages = async (id, imageName) => {
+    const storageRef = ref(storage, `Products/${id}/${imageName}`)
+
+    await deleteObject(storageRef)
+    .catch((err) => {
+        console.log("no se pudo eliminar las imagenes", err);
+    })
+}
+
 module.exports = {
     firebase,
     storage,
     getUserImage,
     uploadUserImage,
-    uploadProductImages
+    uploadProductImages,
+    deleteProductImages
 }

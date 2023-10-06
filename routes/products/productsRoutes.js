@@ -9,7 +9,8 @@ const createProductValidations = require("../../middlewares/validations/products
 const { createProduct,
     productsList,
     productsListByBrands,
-    productDetail
+    productDetail,
+    deleteProduct
 } = productController
 
 router.post(
@@ -25,5 +26,7 @@ router.get("/products-list", productsList)
 router.get("/brands/:brand", productsListByBrands)
 
 router.get("/detail/:id", productDetail)
+
+router.delete("/delete-product/:id", deleteProduct)
 
 module.exports = router

@@ -9,6 +9,7 @@ const productSchema = new Schema({
     price: Number,
     discount: Number,
     stock: Number,
+    condition: String
 })
 
 const Product = model('Product', productSchema)

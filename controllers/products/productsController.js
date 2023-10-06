@@ -1,6 +1,6 @@
 const Product = require("../../models/Product")
 const { validationResult } = require('express-validator');
-const { uploadProductImages } = require('../../firebase')
+const { uploadProductImages, deleteProductImages } = require('../../firebase')
 
 const productController = {
     createProduct: async (req, res) => {
@@ -14,7 +14,7 @@ const productController = {
             return
         }
 
-        const { title, description, category, price, stock, discount, brands } = req.body
+        const { title, description, category, price, stock, discount, brands, condition } = req.body
         const { files } = req
 
         //creamos el array vacio para armar el objeto para mongoDB, con las props.
@@ -38,6 +38,7 @@ const productController = {
             price: price,
             discount: discount,
             stock: stock,
+            condition: condition
         })
 
         await newProduct.save()
@@ -82,12 +83,28 @@ const productController = {
     },
 
     productDetail: async (req, res) => {
-        const {id} = req.params
+        const { id } = req.params
 
         const productDetail = await Product.findById(id)
-        
+
         res.status(200).json({
             data: productDetail
+        })
+    },
+
+    deleteProduct: async (req, res) => {
+        const { id } = req.params
+
+        const { images } = await Product.findById(id)
+
+        images.map((image) => {
+            deleteProductImages(id, image.name)
+        })
+
+        await Product.findByIdAndDelete(id)
+
+        res.json({
+            message: `Se borro el Producto con ID: ${id}`,
         })
     }
 }
