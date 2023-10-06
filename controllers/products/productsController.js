@@ -79,6 +79,16 @@ const productController = {
             length: response.length,
             data: response
         })
+    },
+
+    productDetail: async (req, res) => {
+        const {id} = req.params
+
+        const productDetail = await Product.findById(id)
+        
+        res.status(200).json({
+            data: productDetail
+        })
     }
 }
 

@@ -6,7 +6,11 @@ const productController = require('../../controllers/products/productsController
 const verifyToken = require("../../middlewares/verifyToken")
 const createProductValidations = require("../../middlewares/validations/products/createProductValidation")
 
-const { createProduct, productsList, productsListByBrands } = productController
+const { createProduct,
+    productsList,
+    productsListByBrands,
+    productDetail
+} = productController
 
 router.post(
     "/create-product",
@@ -19,5 +23,7 @@ router.post(
 router.get("/products-list", productsList)
 
 router.get("/brands/:brand", productsListByBrands)
+
+router.get("/detail/:id", productDetail)
 
 module.exports = router
