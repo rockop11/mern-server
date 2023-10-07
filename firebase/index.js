@@ -3,6 +3,7 @@ const { getStorage,
     ref,
     uploadBytes,
     getDownloadURL,
+    listAll,
     deleteObject,
 } = require("firebase/storage")
 
@@ -56,13 +57,31 @@ const uploadProductImages = async (id, images) => {
     }
 }
 
+const getProductsImages = async (id) => {
+    try {
+        const storageRef = ref(storage, `Products/${id}`)
+        const imagesUrls = []
+        const { items } = await listAll(storageRef)
+
+        for (const item of items) {
+            const url = await getDownloadURL(item)
+
+            imagesUrls.push(url)
+        }
+
+        return imagesUrls
+    } catch (err) {
+        console.log("No pude traer las Imagenes", err);
+    }
+}
+
 const deleteProductImages = async (id, imageName) => {
     const storageRef = ref(storage, `Products/${id}/${imageName}`)
 
     await deleteObject(storageRef)
-    .catch((err) => {
-        console.log("no se pudo eliminar las imagenes", err);
-    })
+        .catch((err) => {
+            console.log("no se pudo eliminar las imagenes", err);
+        })
 }
 
 module.exports = {
@@ -71,5 +90,6 @@ module.exports = {
     getUserImage,
     uploadUserImage,
     uploadProductImages,
+    getProductsImages,
     deleteProductImages
 }

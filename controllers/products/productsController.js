@@ -1,6 +1,6 @@
 const Product = require("../../models/Product")
 const { validationResult } = require('express-validator');
-const { uploadProductImages, deleteProductImages } = require('../../firebase')
+const { uploadProductImages, deleteProductImages, getProductsImages } = require('../../firebase')
 
 const productController = {
     createProduct: async (req, res) => {
@@ -83,16 +83,20 @@ const productController = {
     },
 
     productDetail: async (req, res) => {
+        //returns the product detail by id
         const { id } = req.params
 
         const productDetail = await Product.findById(id)
+        const images = await getProductsImages(id)
 
         res.status(200).json({
+            images: images,
             data: productDetail
         })
     },
 
     deleteProduct: async (req, res) => {
+        //deletes a product by ID, and the images in firestore
         const { id } = req.params
 
         const { images } = await Product.findById(id)
@@ -103,7 +107,7 @@ const productController = {
 
         await Product.findByIdAndDelete(id)
 
-        res.json({
+        res.status(200).json({
             message: `Se borro el Producto con ID: ${id}`,
         })
     }
