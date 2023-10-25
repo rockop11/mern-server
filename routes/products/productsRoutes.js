@@ -10,6 +10,7 @@ const { createProduct,
     productsList,
     productsListByBrands,
     productDetail,
+    editProduct,
     deleteProduct
 } = productController
 
@@ -26,6 +27,8 @@ router.get("/products-list", productsList)
 router.get("/brands/:brand", productsListByBrands)
 
 router.get("/detail/:id", productDetail)
+
+router.put("/edit/:id", upload.any("images"), editProduct)
 
 router.delete("/delete-product/:id", deleteProduct)
 

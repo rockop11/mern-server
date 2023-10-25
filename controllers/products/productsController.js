@@ -58,59 +58,111 @@ const productController = {
     },
 
     productsList: async (req, res) => {
-        //returns the list with all the products.
-        const productsList = await Product.find()
+        try {
+            //returns the list with all the products.
+            const productsList = await Product.find()
 
-        res.status(200).json({
-            length: productsList.length,
-            data: productsList,
-        })
+            res.status(200).json({
+                length: productsList.length,
+                data: productsList,
+            })
+        } catch (err) {
+            res.status(500).json({
+                error: err.message
+            })
+        }
+
     },
 
     productsListByBrands: async (req, res) => {
-        //returns a list of products by brands
-        const { brand } = req.params
+        try {
+            //returns a list of products by brands
+            const { brand } = req.params
 
 
-        const response = await Product.find(
-            { brands: { $elemMatch: { brand: `${brand}` } } }
-        )
+            const response = await Product.find(
+                { brands: { $elemMatch: { brand: `${brand}` } } }
+            )
 
-        res.status(200).json({
-            length: response.length,
-            data: response
-        })
+            res.status(200).json({
+                length: response.length,
+                data: response
+            })
+        } catch (err) {
+            res.status(500).json({
+                message: err.message,
+            })
+        }
     },
 
     productDetail: async (req, res) => {
-        //returns the product detail by id
-        const { id } = req.params
+        try {
+            //returns the product detail by id
+            const { id } = req.params
 
-        const productDetail = await Product.findById(id)
-        const images = await getProductsImages(id)
+            const productDetail = await Product.findById(id)
+            const images = await getProductsImages(id)
 
-        res.status(200).json({
-            images: images,
-            data: productDetail
-        })
+            res.status(200).json({
+                images: images,
+                data: productDetail
+            })
+        } catch (err) {
+            res.status(500).json({
+                error: err.message
+            })
+        }
+    },
+
+    editProduct: async (req, res) => {
+        try {
+            const { id } = req.params
+            const { brands } = req.body
+
+            const brandNames = []
+
+            brands.map((brand) => {
+                brandNames.push({ brand: brand })
+            })
+
+            const response = await Product.updateOne({ _id: id }, {
+                $set: req.body,
+                $set: { brands: brandNames }
+            })
+
+            res.status(200).json({
+                message: `Acabas de Editar el producto con id: ${id}`
+            })
+        } catch (err) {
+            res.status(500).json({
+                message: err.message
+            })
+        }
     },
 
     deleteProduct: async (req, res) => {
-        //deletes a product by ID, and the images in firestore
-        const { id } = req.params
+        try {
+            //deletes a product by ID, and the images in firestore
+            const { id } = req.params
 
-        const { images } = await Product.findById(id)
+            const { images } = await Product.findById(id)
 
-        images.map((image) => {
-            deleteProductImages(id, image.name)
-        })
+            images.map((image) => {
+                deleteProductImages(id, image.name)
+            })
 
-        await Product.findByIdAndDelete(id)
+            await Product.findByIdAndDelete(id)
 
-        res.status(200).json({
-            message: `Se borro el Producto con ID: ${id}`,
-        })
-    }
+            res.status(200).json({
+                message: `Se borro el Producto con ID: ${id}`,
+            })
+        } catch (err) {
+            res.status(500).json({
+                message: err.message
+            })
+        }
+
+    },
 }
 
 module.exports = productController;
