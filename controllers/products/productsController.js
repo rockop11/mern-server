@@ -14,7 +14,16 @@ const productController = {
             return
         }
 
-        const { title, description, category, price, stock, discount, brands, condition } = req.body
+        const {
+            title,
+            description,
+            category,
+            price,
+            stock,
+            discount,
+            brands,
+            condition
+        } = req.body
         const { files } = req
 
         //creamos el array vacio para armar el objeto para mongoDB, con las props.
@@ -117,7 +126,29 @@ const productController = {
     editProduct: async (req, res) => {
         try {
             const { id } = req.params
-            const { brands } = req.body
+            const { files } = req
+            const {
+                title,
+                description,
+                stock,
+                discount,
+                price,
+                category,
+                condition,
+                brands
+            } = req.body
+
+            if (files.length > 0) {
+                //Product.findById(id), encontrar el producto para conseguir el nombre de las imagenes,
+
+                //usar el metodo deleteProductImages(id, imageName) y pasarle el nombre de la imagenes que seran borradas
+
+                //subir las nuevas a firestore, y los names a mongo db
+                console.log("llegaron files");
+            } else {
+                console.log("no llegaron files");
+            }
+
 
             const brandNames = []
 
@@ -125,9 +156,17 @@ const productController = {
                 brandNames.push({ brand: brand })
             })
 
-            const response = await Product.updateOne({ _id: id }, {
-                $set: req.body,
-                $set: { brands: brandNames }
+            await Product.updateOne({ _id: id }, {
+                $set: {
+                    title: title,
+                    price: price,
+                    description: description,
+                    stock: stock,
+                    discount: discount,
+                    category: category,
+                    condition: condition,
+                    brands: brandNames
+                },
             })
 
             res.status(200).json({
